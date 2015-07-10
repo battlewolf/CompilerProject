@@ -6,6 +6,6 @@ Lex file description:
 1. Add proper indentation
 2. Change function definitions
 3. Modify conditional and looping constructs
-4. Remove #includes and put proper printing statements
+4. Remove #includes and put proper printing statements and also convert the scanf to input() statements
 
 Other files : run.sh - To convert the given code to C run this script with argument as the C file name. It generates the output.py file which can be run with "python output.py"

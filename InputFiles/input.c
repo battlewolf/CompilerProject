@@ -22,7 +22,11 @@ int main()
 	{
 		if(i % 2 == 0 || 2 == 2) 
 		{
-			printf("\n Fuck yeah");
+			printf("\n Bison");
+		}
+		else if(i == 2)
+		{
+			printf("\n Lakshmi");
 		}
 	}
 }

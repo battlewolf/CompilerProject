@@ -13,6 +13,11 @@ single {typed}\ {varn}
 %%
 
 {typed}\ {alpha}{alphanum}*\_*{alphanum}*\(({single}(\,\ {single})*)?\) {
+
+// int func____func(int a, int b, int c)
+// def func____func(a, b, c)
+
+
 //	printf("seen a function");
 	int i, j;
 	i = j = 0;
@@ -33,6 +38,10 @@ single {typed}\ {varn}
 	
 //------------------------------------------	
 // Extraction of the function arguments
+// int a,b,c
+//int func(int a, int b, int c)
+
+
 	if(yytext[i+1] != ')') {
 		i++;
 		memset(vars, '#', sizeof vars);
@@ -47,7 +56,9 @@ single {typed}\ {varn}
 		temp[k] = '\0';
 //		printf("\ntemp : %s", temp);
 		k = 0;
+		//int name;
 		while(temp[k] != ' ') k++;
+		
 		k++;
 		while(temp[k] != '\0') {
 			vars[j] = temp[k];
@@ -81,7 +92,7 @@ single {typed}\ {varn}
 
 }
 
-{typed}\ ({varn})(\,\ {varn})*\; ;
+{typed}\ ({varn})(\,\ {varn})*\; ; 
 
 
 \|\| { printf("or");

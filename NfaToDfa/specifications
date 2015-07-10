@@ -1,0 +1,22 @@
+Input format:
+
+The states are numbered starting from 0
+#number of states #number of input symbols. This will exclude epsilon(first column will always indicate epsilon)
+#index of initial state
+#number of final states
+loop until you get all the indices of final states
+
+
+epislon column     sym1 column    sym2 column . . . . . symn column
+
+Space indicates that we jumped to the next column
+
+
+Sample input:
+
+3 2
+1
+2
+1
+2
+2 0,1

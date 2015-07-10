@@ -1,5 +1,5 @@
 
-int solve(int a, int b) 
-{
-	return a + b;
+
+int func(int n) {
+	return 1;
 }

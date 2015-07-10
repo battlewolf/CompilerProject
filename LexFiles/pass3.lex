@@ -24,7 +24,6 @@ for\([^\);]*\;[^\);]*\;[^\);]*\) {
 	j = 0;
 	while(!(yytext[i] >= '0' && yytext[i] <= '9'))i++;
 	while(yytext[i] != ';') {
-		
 		start[j] = yytext[i];
 		i++; j++;
 	}
@@ -50,7 +49,6 @@ for\([^\);]*\;[^\);]*\;[^\);]*\) {
 		j++;
 	}
 	counter[j] = '\0';
-//	printf("varname : %s start : %s limit : %s counter : %s", var_name, start, limit, counter);
 	printf("for %s in range(%s, %s, %s):", var_name, start, limit, counter);
 
 
@@ -65,11 +63,28 @@ def\ {varn}\([^;\)]*\) {
 	printf("%s:", yytext);
 }
 
-if\([^;]*\) {
+
+else\ if\([^;\)]*\) {
+	int i = 7, j = 0;
+	char cond[100];
+	while (yytext[i] != ')') {
+		cond[j] = yytext[i];
+		i++; j++;
+	}
+	cond[j] = yytext[i]; j++;
+	cond[j] = '\0';
+	printf("elif%s:",cond);
+}
+
+else {
+	printf("else:");
+}
+
+
+if\([^;\)]*\) {
 //	printf(" I get seen : %s", yytext);	
 	printf("%s:",yytext);
 }
-
 
 \{ ;
 \} ;

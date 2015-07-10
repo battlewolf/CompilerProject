@@ -10,9 +10,31 @@ varn {alpha}{alphanum}*\_*{alphanum}*
 single {typed}\ {varn}
 
 ps \,{varn}
+ps2 \,\&{varn}
 
 %%
 \#include\<[a-z0-9]+\.h\> ;
+
+
+scanf\(\"[^;)"]+\"{ps2}+\); {
+	int i = 0, j = -1, k = 0;
+	while (yytext[i] != '"') i++; i++;
+	while (yytext[i] != '"') i++;
+	i += 2;
+	char names[100][100]; memset(names, '\0', sizeof names);
+	while (yytext[i] != ')') {
+		if (yytext[i] == '&') {
+			j++; k = 0;
+		}
+		if (yytext[i] != '&' && yytext[i] != ',') {
+			names[j][k++] = yytext[i];
+		}
+		i++;
+	}
+	for( i = 0; i <= j-1; i++) 
+		printf("%s = input();\n", names[i]);
+	printf("%s = input();",names[j]);
+}
 
 printf\(\".*\"{ps}*\) {
 //	printf("\n Getting matched");
