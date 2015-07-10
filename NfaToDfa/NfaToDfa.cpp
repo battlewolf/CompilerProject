@@ -21,9 +21,23 @@ int start_state;
 vector<int> final_states;
 
 
-int epsilonClosure (int u, vector<vector<vector<int> > > &table) {
+void epsilonClosure (int curr_node, long long &seen, vector<vector<vector<int> > > &table) {
+    if ((seen & (1L << curr_node))) return;
+    seen |= (1L << curr_node);
+    
+    for (int i = 0; i < int(table[curr_node][0].size()); ++i) {
+        epsilonClosure (table[curr_node][0][i], seen, table);
+    }
 
 }
+
+long long startEpsilonClosure (int start_node, vector<vector<vector<int> > > &table) {
+    long long flag = 0;
+    epsilonClosure(start_state, flag, table);
+    return flag;
+}
+
+
 
 
 
@@ -76,7 +90,7 @@ vector<vector<vector<int> > > parseInput() {
         }
         ret.push_back(table_temp);
     }
-
+/*
     for (int i = 0; i < STATES; ++i) {
         for (int j = 0; j < SYMBOLS + 1; ++j) {
             cout << i << " " << j << " : ";
@@ -86,11 +100,16 @@ vector<vector<vector<int> > > parseInput() {
             cout << endl;
         }
     }
-
+*/
     return ret;
 }
 
 int main() {
-    parseInput();
+    vector<vector<vector<int> > > table = parseInput();
+
+
+
+
+
     return 0;
 }
