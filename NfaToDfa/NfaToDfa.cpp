@@ -4,7 +4,7 @@
 
  * Creation Date : Friday 10 July 2015 12:04:37 AM IST
 
- * Last Modified : Saturday 11 July 2015 04:05:21 PM IST
+ * Last Modified : Sunday 12 July 2015 02:35:02 AM IST
 
  _._._._._._._._._._._._._._._._._._._._._.*/
 
@@ -16,15 +16,25 @@
 #include <queue>
 #include <set>
 using namespace std;
+
+#define MAX 64 //maximum number of states in the dfa must be 64 only. 
 typedef unsigned long long ULL;
 int STATES, SYMBOLS;
 int start_state;
 vector<int> final_states;
-
+vector<ULL> epsclosure (MAX, -1);
 
 void epsilonClosure (int curr_node, unsigned long long &seen, vector<vector<vector<int> > > &table) {
-    if ((seen & (1L << curr_node))) return;
-    seen |= (1L << curr_node);
+
+    unsigned long long _one = 1;
+
+    if (epsclosure[curr_node] != -1) {
+        seen |= epsclosure[curr_node];
+        return;
+    }
+
+    if ((seen & (_one << curr_node))) return;
+    seen |= (_one << curr_node);
 
     for (int i = 0; i < int(table[curr_node][0].size()); ++i) {
         if (table[curr_node][0][i] != -1)
@@ -34,17 +44,42 @@ void epsilonClosure (int curr_node, unsigned long long &seen, vector<vector<vect
 }
 
 unsigned long long startEpsilonClosure (int start_node, vector<vector<vector<int> > > &table) {
+
+    if (epsclosure[start_node] != -1) return epsclosure[start_node];
+
     unsigned long long flag = 0;
-    epsilonClosure(start_state, flag, table);
-    return flag;
+    epsilonClosure(start_node, flag, table);
+    return epsclosure[start_node] = flag;
 }
+
+int giveTypeOfState (int state) {
+    int ret = 0; 
+    ULL _one = 1;
+    for (int i = 0; i < STATES; ++i) {
+
+        if ( (state & (_one << i)) ) {
+            for (int j = 0; j < int(final_states.size()); ++j) {
+                if (i == final_states[j]) ret |= 2;
+            }
+        }
+    }
+    return ret;
+
+}
+
 
 void subsetConstruction (vector<vector<vector<int> > > &table) {
     //1) Find the starting state using the epsilon closure of the starting state of the epsilon NFA
-
     vector<vector<vector<int> > > dfatable;
     unsigned long long dfastart_state = startEpsilonClosure (start_state, table);
 
+
+    for (int i = 1; i <= SYMBOLS; ++i) cout << " " << i ;
+    cout << endl;
+    
+    cout << "->";
+
+    /*Start the construction*/
     queue <ULL> Q; 
     set <ULL> seen;
     Q.push(dfastart_state);
@@ -56,8 +91,16 @@ void subsetConstruction (vector<vector<vector<int> > > &table) {
         ULL curr_state = Q.front();
         Q.pop();
         ULL go_state = 0;
-        
-        
+        if (giveTypeOfState (curr_state) == 2) {
+            cout << "*";
+        }
+        else {
+            cout << " ";
+        }
+
+        cout << curr_state;
+
+
         for (int i = 1; i <= SYMBOLS; ++i) {
 
             go_state = 0;
@@ -65,42 +108,37 @@ void subsetConstruction (vector<vector<vector<int> > > &table) {
                 if (curr_state & (_one << j)) {
                     for (int k = 0; k < (int) table[j][i].size(); k++) {
                         if (table[j][i][k] != -1) {
-                            go_state |= table[j][i][k];
+                            go_state |= (_one << table[j][i][k]);
                         }
                     }
                 }
             }
- //           cout << go_state << endl;
             if (go_state == 0) {
-            //No transitions on this input symbol
+                //No transitions on this input symbol
+                cout << " " << -1;
                 continue;
             }
             else {
-            //find epsilon transitions for this state
-            
+                //find epsilon transitions for this set
+
                 for (int j = 0; j < STATES; ++j) {
                     if (go_state & (_one << j)) {
-                        cout << j << startEpsilonClosure (j, table) << endl;
                         go_state |= startEpsilonClosure (j, table);
                     }
                 }
 
-//                cout << go_state << endl;
-
+                    cout << " " << go_state;
+                if (seen.find(go_state) == seen.end()) {
+                    seen.insert (go_state);
+                    Q.push (go_state);
+                }
             }
 
+
         }
-
+        cout << endl;
     }
-
-
 }
-
-
-
-
-
-
 
 vector<int> parseInputStates(char buff[]) {
     if (*buff == '-') {
@@ -142,7 +180,7 @@ vector<vector<vector<int> > > parseInput() {
     }
 
     char buff[25];
-
+/*The symbols are indexed from 0, 1, ... . For e.g., if you use a,b , this is mapped to 0,1 .*/
     for (int i = 0; i < STATES; ++i) {
         vector<vector<int> > table_temp;
         for (int j = 0; j < SYMBOLS+1; ++j) { //+1 for the epsilon state
@@ -151,26 +189,11 @@ vector<vector<vector<int> > > parseInput() {
         }
         ret.push_back(table_temp);
     }
-    /*
-       for (int i = 0; i < STATES; ++i) {
-       for (int j = 0; j < SYMBOLS + 1; ++j) {
-       cout << i << " " << j << " : ";
-       for (int k = 0; k < int(ret[i][j].size()); ++k) {
-       cout << ret[i][j][k] << " ";
-       }
-       cout << endl;
-       }
-       }
-       */
     return ret;
 }
 
 int main() {
     vector<vector<vector<int> > > table = parseInput();
     subsetConstruction (table);
-
-
-
-
     return 0;
 }

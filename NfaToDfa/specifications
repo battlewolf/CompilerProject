@@ -20,3 +20,23 @@ Sample input:
 1
 2
 2 0,1
+
+
+Sample output:
+
+* - indicates ending state
+-> - indicates starting state
+
+        sym1 column sym2 column
+state1 
+state2
+.
+.
+.
+.
+staten
+
+ 1 2
+->*5 7 -1
+*7 7 4
+*4 -1 -1
