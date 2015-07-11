@@ -4,7 +4,7 @@
 
  * Creation Date : Friday 10 July 2015 12:04:37 AM IST
 
- * Last Modified : Saturday 11 July 2015 03:54:40 PM IST
+ * Last Modified : Saturday 11 July 2015 04:05:21 PM IST
 
  _._._._._._._._._._._._._._._._._._._._._.*/
 
@@ -56,7 +56,6 @@ void subsetConstruction (vector<vector<vector<int> > > &table) {
         ULL curr_state = Q.front();
         Q.pop();
         ULL go_state = 0;
-        cout << curr_state << endl;
         
         
         for (int i = 1; i <= SYMBOLS; ++i) {
@@ -71,13 +70,23 @@ void subsetConstruction (vector<vector<vector<int> > > &table) {
                     }
                 }
             }
-
+ //           cout << go_state << endl;
             if (go_state == 0) {
-            
+            //No transitions on this input symbol
                 continue;
             }
             else {
-                
+            //find epsilon transitions for this state
+            
+                for (int j = 0; j < STATES; ++j) {
+                    if (go_state & (_one << j)) {
+                        cout << j << startEpsilonClosure (j, table) << endl;
+                        go_state |= startEpsilonClosure (j, table);
+                    }
+                }
+
+//                cout << go_state << endl;
+
             }
 
         }
